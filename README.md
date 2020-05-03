@@ -1,6 +1,11 @@
 # SISwitch
-Switch Customisation Dynamically Set animation Color and Face Color
 
+
+#Download the repository and find the SISwitch.swift file
+Drag and Drop in your project
 
 
 ![SISwitchGif.gif](SISwitchGif.gif)
+
+####There 
+
