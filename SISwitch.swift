@@ -1,40 +1,69 @@
 //
-//  SIViewController.swift
-//  SISwitchDemo
+//  SISwitch.swift
+//  SISwitch
 //
 //  Created by Mohd Sazid Iqabal on 03/05/20.
 //  Copyright © 2020 Sazid. All rights reserved.
+//
 
 import UIKit
 
 @IBDesignable
 class SISwitch: UIView {
-    private var circleFaceLayer: CAShapeLayer?
-    private var paddingWidth: CGFloat = 0.0
-    private var circleFaceRadius: CGFloat = 0.0
-    private var moveDistance: CGFloat = 0.0
-    private var faceLayerWidth: CGFloat = 0.0
-    private var animationDuration: CGFloat = 1.2
-    private var isAnimating = false
-    private var faceOnColor: UIColor? = .white
-    private var faceOfColor: UIColor? = .white
     
-    private var offColor: UIColor? = UIColor.darkGray
-    private var onColor: UIColor? = UIColor.red
+    private var circleThumbLayer: CAShapeLayer?
+    private var paddingWidth: CGFloat = 0.0
+    private var circleThumbRadius: CGFloat = 0.0
+    private var moveDistance: CGFloat = 0.0
+    private var thumbLayerWidth: CGFloat = 0.0
+    private var isAnimating = false
     private var isOn = false
 
-    @IBInspectable var bgOnColor: UIColor? {
+    
+    /// Customizable Properties
+    
+    private var animationDuration: CGFloat = 1.2
+    private var thumbOnColor: UIColor? = .white
+    private var thumbOfColor: UIColor? = .white
+    private var offColor: UIColor? = UIColor.darkGray
+    private var onColor: UIColor? = UIColor.red
+    
+    /// Set the Animation Duration
+    @IBInspectable var durationAnimation: CGFloat {
         get {
-            return onColor
+            return animationDuration
         }
-        set(colorOn) {
-            self.onColor = colorOn
-            if isOn {
-                self.backgroundColor = colorOn
-            }
+        set(duration) {
+            animationDuration = duration
         }
     }
     
+    
+    /// Set Thumb color for On State
+    @IBInspectable var onThumbColor: UIColor? {
+        get {
+            return thumbOnColor
+        }
+        set(thumbColor) {
+            thumbOnColor = thumbColor
+        }
+    }
+    
+    
+    
+    /// Set Thumb color for Off State
+    @IBInspectable var offThumbColor: UIColor? {
+        get {
+            return thumbOfColor
+        }
+        set(offColor) {
+            thumbOfColor = offColor
+            circleThumbLayer?.fillColor = offColor?.cgColor
+        }
+    }
+    
+    
+    /// Set switch background color for Off state
     @IBInspectable var bgOffColor: UIColor? {
         get {
             return offColor
@@ -47,45 +76,31 @@ class SISwitch: UIView {
         }
     }
     
-    @IBInspectable var onFaceColor: UIColor? {
+    /// Set switch background color for On state
+    @IBInspectable var bgOnColor: UIColor? {
         get {
-            return faceOnColor
+            return onColor
         }
-        set(faceColor) {
-            faceOnColor = faceColor
-        }
-    }
-    
-    @IBInspectable var offFaceColor: UIColor? {
-        get {
-            return faceOfColor
-        }
-        set(offColor) {
-            faceOfColor = offColor
-            circleFaceLayer?.fillColor = offColor?.cgColor
-        }
-    }
-    
-    @IBInspectable var durationAnimation: CGFloat {
-        get {
-            return animationDuration
-        }
-        set(duration) {
-            animationDuration = duration
-        }
-    }
-    
-    private var circleFaceLayerInit: CAShapeLayer? {
-        if circleFaceLayer == nil {
-            circleFaceLayer = CAShapeLayer()
-            circleFaceLayer?.frame = CGRect(x: paddingWidth, y: paddingWidth, width: circleFaceRadius * 2, height: circleFaceRadius * 2)
-            let circlePath = UIBezierPath(ovalIn: circleFaceLayer!.bounds)
-            circleFaceLayer?.path = circlePath.cgPath
-            if let circleFaceLayer = circleFaceLayer {
-                self.layer.addSublayer(circleFaceLayer)
+        set(colorOn) {
+            self.onColor = colorOn
+            if isOn {
+                self.backgroundColor = colorOn
             }
         }
-        return circleFaceLayer
+    }
+    
+    
+    private var circleThumbLayerInit: CAShapeLayer? {
+        if circleThumbLayer == nil {
+            circleThumbLayer = CAShapeLayer()
+            circleThumbLayer?.frame = CGRect(x: paddingWidth, y: paddingWidth, width: circleThumbRadius * 2, height: circleThumbRadius * 2)
+            let circlePath = UIBezierPath(ovalIn: circleThumbLayer!.bounds)
+            circleThumbLayer?.path = circlePath.cgPath
+            if let circleThumbLayer = circleThumbLayer {
+                self.layer.addSublayer(circleThumbLayer)
+            }
+        }
+        return circleThumbLayer
     }
     
     override init(frame: CGRect) {
@@ -103,9 +118,9 @@ extension SISwitch:  CAAnimationDelegate {
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         print(#function)
         if isOn {
-            circleFaceLayer?.position = CGPoint(x: circleFaceLayer!.position.x - moveDistance, y: circleFaceLayer!.position.y)
+            circleThumbLayer?.position = CGPoint(x: circleThumbLayer!.position.x - moveDistance, y: circleThumbLayer!.position.y)
         } else {
-            circleFaceLayer?.position = CGPoint(x: circleFaceLayer!.position.x + moveDistance, y: circleFaceLayer!.position.y)
+            circleThumbLayer?.position = CGPoint(x: circleThumbLayer!.position.x + moveDistance, y: circleThumbLayer!.position.y)
         }
         isOn = !isOn
         isAnimating = false
@@ -118,10 +133,10 @@ extension SISwitch {
         self.backgroundColor = offColor
         self.layer.cornerRadius = self.frame.height/2
         paddingWidth = frame.size.height * 0.1
-        circleFaceRadius = (frame.size.height - 2 * paddingWidth) / 2
-        moveDistance = frame.size.width - paddingWidth * 2 - circleFaceRadius * 2
-        circleFaceLayerInit?.fillColor = UIColor.white.cgColor
-        faceLayerWidth = circleFaceLayer!.frame.size.width
+        circleThumbRadius = (frame.size.height - 2 * paddingWidth) / 2
+        moveDistance = frame.size.width - paddingWidth * 2 - circleThumbRadius * 2
+        circleThumbLayerInit?.fillColor = UIColor.white.cgColor
+        thumbLayerWidth = circleThumbLayer!.frame.size.width
         addGestureRecognizer(UITapGestureRecognizer(
             target: self,
             action: #selector(handleTapSwitch)))
@@ -139,8 +154,8 @@ extension SISwitch {
     
     
     func moveAnimation() {
-        let fromPosition  = circleFaceLayer!.position
-        let toPosition = isOn ? CGPoint(x: circleFaceLayer!.position.x - moveDistance, y: circleFaceLayer!.position.y) : CGPoint(x: circleFaceLayer!.position.x + moveDistance, y: circleFaceLayer!.position.y)
+        let fromPosition  = circleThumbLayer!.position
+        let toPosition = isOn ? CGPoint(x: circleThumbLayer!.position.x - moveDistance, y: circleThumbLayer!.position.y) : CGPoint(x: circleThumbLayer!.position.x + moveDistance, y: circleThumbLayer!.position.y)
         let moveAnimation = CABasicAnimation(keyPath: "position")
         moveAnimation.fromValue = NSValue(cgPoint: fromPosition)
         moveAnimation.toValue = NSValue(cgPoint: toPosition)
@@ -149,8 +164,8 @@ extension SISwitch {
         moveAnimation.isRemovedOnCompletion = false
         moveAnimation.fillMode = .forwards
         moveAnimation.delegate = self
-        circleFaceLayer?.add(moveAnimation, forKey: "SIGlobalConstant.SIFaceMovementAnimationKey")
-        self.circleFaceLayerInit?.fillColor = self.isOn ? self.faceOfColor?.cgColor : self.faceOnColor?.cgColor
+        circleThumbLayer?.add(moveAnimation, forKey: "SIThumbMovementAnimationKey")
+        self.circleThumbLayerInit?.fillColor = self.isOn ? self.thumbOfColor?.cgColor : self.thumbOnColor?.cgColor
         
     }
     
@@ -163,6 +178,7 @@ extension SISwitch {
         colorAnimation.duration = CFTimeInterval(animationDuration * 2 / 3)
         colorAnimation.isRemovedOnCompletion = false
         colorAnimation.fillMode = .forwards
-        self.layer.add(colorAnimation, forKey: "SIGlobalConstant.SIBgColorAnimationKey")
+        self.layer.add(colorAnimation, forKey: "SIBgColorAnimationKey")
     }
 }
+
