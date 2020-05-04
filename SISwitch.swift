@@ -1,10 +1,9 @@
 //
-//  SISwitch.swift
-//  SwitchCustomisation
+//  SIViewController.swift
+//  SISwitchDemo
 //
-//  Created by call soft on 03/05/20.
+//  Created by Mohd Sazid Iqabal on 03/05/20.
 //  Copyright © 2020 Sazid. All rights reserved.
-//
 
 import UIKit
 
