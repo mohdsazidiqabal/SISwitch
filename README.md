@@ -4,6 +4,8 @@
 Download the repository and find the SISwitch.swift file
 Drag and Drop in your project
 
+#Suitable for Swift 4 and Swift 5 version. With Xcode Above 10.
+
 
 ![SISwitchGif.gif](SISwitchGif.gif)
 
